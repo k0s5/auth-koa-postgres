@@ -115,6 +115,7 @@
       "@/*": ["src/*"],
       "@controllers": ["src/controllers"],
       "@services": ["src/services"],
+      "@db": ["src/db"],
       "@shared": ["src/shared"],
       "@routes": ["src/routes/index"],
       "@config": ["src/shared/config"],
