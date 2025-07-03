@@ -4,6 +4,7 @@ import cors from '@koa/cors'
 import { bodyParser } from '@koa/bodyparser'
 import router from '@routes'
 import { config } from '@config'
+import { prisma } from '@db'
 
 const app = new Koa()
 
@@ -16,10 +17,10 @@ app.use(
 
 // Middleware для добавления Prisma в контекст
 // app.context.prisma = prisma
-// app.use(async (ctx, next) => {
-//   ctx.prisma = prisma
-//   await next()
-// })
+app.use(async (ctx, next) => {
+  ctx.prisma = prisma
+  await next()
+})
 
 app.use(bodyParser())
 
@@ -49,9 +50,9 @@ async function gracefulShutdown(signal: string) {
   console.log(`Received ${signal}, shutting down gracefully...`)
   isGracefulShutdownStarted = true
 
-  // if (prisma) {
-  //   await prisma.$disconnect()
-  // }
+  if (prisma) {
+    await prisma.$disconnect()
+  }
 
   process.exit(1)
 
