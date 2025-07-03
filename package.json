@@ -12,6 +12,7 @@
     "docker:dev:db:down": "docker-compose -f docker-compose.dev.yml down postgres adminer",
     "migrate:dev": "pnpm prisma migrate dev",
     "migrate:deploy": "npx prisma migrate deploy",
+    "migrate:reset": "npx prisma migrate reset",
     "generate": "npx prisma generate"
   },
   "dependencies": {
@@ -39,6 +40,6 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",
   "prisma": {
-    "schema": "src/db/client/schema.prisma"
+    "schema": "src/db/schema.prisma"
   }
 }

@@ -5,18 +5,33 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = ""
+  url      = env("POSTGRES_DB_URI")
 }
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  username      String   @unique
+  id            String    @id @default(uuid())
+  email         String    @unique
+  username      String    @unique
   passwordHash  String
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  refreshTokens Session[]
 
   @@index([email])
   @@map("users")
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([token])
+  @@index([userId])
+  @@map("sessions")
 }
