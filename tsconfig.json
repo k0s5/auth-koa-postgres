@@ -110,9 +110,13 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
 
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@shared": ["src/shared"],
+      "@routes": ["src/routes/index"],
+      "@config": ["src/shared/config"],
+      "@types": ["src/shared/types"]
     }
   }
 }
