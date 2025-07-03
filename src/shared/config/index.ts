@@ -3,6 +3,7 @@ import { envSchema } from './schema'
 
 interface Config {
   nodeEnv: 'development' | 'production' | 'test'
+
   ports: {
     service: number
   }
