@@ -7,7 +7,9 @@
     "build": "tsc",
     "dev": "tsx watch --clear-screen=false src/index.ts",
     "start": "node dist/index.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "docker:dev:db:up": "docker-compose -f docker-compose.dev.yml up -d postgres adminer",
+    "docker:dev:db:down": "docker-compose -f docker-compose.dev.yml down postgres adminer"
   },
   "dependencies": {
     "@koa/bodyparser": "^6.0.0",
