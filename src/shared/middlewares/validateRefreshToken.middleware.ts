@@ -1,9 +1,9 @@
 import { Context, Next } from 'koa'
-import { SessionService } from '@/services'
+import { SessionService } from '@services'
 import { TokenType } from '@shared/types'
 import { ApiError } from '../api'
 
-export async function validateRefreshTokenMiddleware(ctx: Context, next: Next) {
+export async function validateRefreshToken(ctx: Context, next: Next) {
   const refreshToken = ctx.cookies.get('refreshToken')
 
   if (!refreshToken) {
