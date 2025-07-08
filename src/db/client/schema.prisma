@@ -9,27 +9,30 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  username      String    @unique
-  passwordHash  String
-  isActive      Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  refreshTokens Session[]
+  id           String    @id @default(uuid())
+  email        String    @unique
+  username     String    @unique
+  passwordHash String
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
 
   @@index([email])
   @@map("users")
 }
 
 model Session {
-  id        String    @id @default(uuid())
-  token     String    @unique
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  expiresAt DateTime
-  createdAt DateTime  @default(now())
-  revokedAt DateTime?
+  id          String    @id @default(uuid())
+  token       String    @unique
+  userId      String
+  fingerprint String
+  ip          String
+  ua          String
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+  revokedAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id])
 
   @@index([token])
   @@index([userId])

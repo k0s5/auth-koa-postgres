@@ -134,6 +134,9 @@ exports.Prisma.SessionScalarFieldEnum = {
   id: 'id',
   token: 'token',
   userId: 'userId',
+  fingerprint: 'fingerprint',
+  ip: 'ip',
+  ua: 'ua',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   revokedAt: 'revokedAt'
