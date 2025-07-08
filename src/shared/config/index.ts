@@ -1,28 +1,13 @@
 import dotenv from 'dotenv'
 import { envSchema } from './schema'
-
-interface Config {
-  nodeEnv: 'development' | 'production' | 'test'
-
-  ports: {
-    service: number
-  }
-
-  saltRounds: number
-
-  postgres: { uri: string }
-
-  cors?: {
-    origin: string
-  }
-}
+import type { IConfig } from '@shared/types'
 
 // Load environment variables from a specific .env file
 dotenv.config({
   path: require.resolve('../../../.env'),
 })
 
-function validateEnv(): Config {
+function validateEnv(): IConfig {
   const { error, value } = envSchema.validate(process.env, {
     abortEarly: false, // show all errors
     stripUnknown: true, // remove unknown fields
@@ -39,6 +24,8 @@ function validateEnv(): Config {
   // Transform a flat structure into a nested one
   return {
     nodeEnv: value.NODE_ENV,
+    isDev: value.NODE_ENV === 'development',
+
     ports: {
       service: value.PORT,
     },
@@ -50,13 +37,20 @@ function validateEnv(): Config {
     },
 
     postgres: {
-      uri: `postgresql://${value.POSTGRES_USER}:${value.POSTGRES_PASS}@${value.POSTGRES_HOST}:${value.POSTGRES_PORT}/${value.POSTGRES_DB_NAME}`,
+      uri: `postgresql://${value.POSTGRES_USER}:${value.POSTGRES_PASSWORD}@${value.POSTGRES_HOST}:${value.POSTGRES_EXTERNAL_PORT}/${value.POSTGRES_DB_NAME}`,
+    },
+
+    secrets: {
+      accessToken: value.ACCESS_TOKEN_SECRET,
+      refreshToken: value.REFRESH_TOKEN_SECRET,
+      accessTokenLifetime: value.ACCESS_TOKEN_LIFETIME,
+      refreshTokenLifetime: value.REFRESH_TOKEN_LIFETIME,
     },
   }
 }
 
 // Exporting the validated configuration
-export const config: Config = validateEnv()
+export const config: IConfig = validateEnv()
 
 // Additional utilities
 export const isDevelopment = () => config.nodeEnv === 'development'

@@ -8,14 +8,28 @@ export const envSchema = Joi.object({
 
   PORT: Joi.number().port(),
 
+  // CORS
   CORS_ORIGIN: Joi.string().default('*'),
+
+  // Password
+  SALT_ROUNDS: Joi.number().default(10),
 
   // Postgres
   POSTGRES_USER: Joi.string(),
-  POSTGRES_PASS: Joi.string(),
+  POSTGRES_PASSWORD: Joi.string(),
   POSTGRES_HOST: Joi.string(),
   POSTGRES_PORT: Joi.string(),
   POSTGRES_DB_NAME: Joi.string(),
+  POSTGRES_INTERNAL_PORT: Joi.string(),
+  POSTGRES_EXTERNAL_PORT: Joi.string(),
+  POSTGRES_ADMINER_INTERNAL_PORT: Joi.string(),
+  POSTGRES_ADMINER_EXTERNAL_PORT: Joi.string(),
+
+  // Secrets
+  ACCESS_TOKEN_SECRET: Joi.string(),
+  ACCESS_TOKEN_LIFETIME: Joi.string(),
+  REFRESH_TOKEN_SECRET: Joi.string(),
+  REFRESH_TOKEN_LIFETIME: Joi.string(),
 
   // Email
   // SMTP_HOST: Joi.string().when('NODE_ENV', {
