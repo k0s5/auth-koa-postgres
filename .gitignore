@@ -8,6 +8,9 @@ dist/
 build/
 .next/
 
+# Logs
+logs/
+
 # Environment variables
 .env
 .env.local
