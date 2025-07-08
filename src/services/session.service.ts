@@ -1,0 +1,148 @@
+import { Context } from 'koa'
+import jwt, { type Secret, type JwtPayload } from 'jsonwebtoken'
+import { config } from '@/shared/config'
+import { addTimeToDate } from '@shared/utils'
+import { prisma } from '@/db'
+import {
+  type ICreateSessionPayload,
+  type ITokenPayload,
+  TokenType,
+} from '@/shared/types'
+import { ApiError } from '@/shared/api'
+
+export class SessionService {
+  static async create(ctx: Context, payload: ICreateSessionPayload) {
+    const { accessToken, refreshToken } = SessionService.generateTokens(payload)
+
+    const refreshTokenLifetimeMs = addTimeToDate(
+      config.secrets.refreshTokenLifetime
+    )
+
+    await prisma.session.create({
+      data: {
+        userId: payload.userId,
+        token: refreshToken,
+        fingerprint: crypto.randomUUID(),
+        ua: ctx.request.headers['user-agent'] ?? 'unknown',
+        ip: ctx.request.ip || ctx.get('x-forwarded-for') || '::1',
+        expiresAt: refreshTokenLifetimeMs,
+      },
+    })
+
+    return {
+      accessToken,
+      refreshToken,
+    }
+  }
+
+  static async update(
+    refreshToken: string,
+    payload: { newRefreshToken: string; fingerprint?: string }
+  ) {
+    const now = new Date()
+
+    await prisma.session.update({
+      data: {
+        token: payload.newRefreshToken,
+        ...(payload?.fingerprint && { fingerprint: payload.fingerprint }),
+        createdAt: now,
+        expiresAt: addTimeToDate(config.secrets.refreshTokenLifetime, now),
+      },
+      where: {
+        token: refreshToken,
+      },
+    })
+  }
+
+  static async delete(token: string) {
+    await prisma.session.delete({
+      where: { token },
+    })
+  }
+
+  /*#region HELPERS*/
+  static generateTokens(payload: ICreateSessionPayload) {
+    const { email, userId, username } = payload
+
+    const accessToken = jwt.sign(
+      { email, userId, username },
+      config.secrets.accessToken as Secret,
+      {
+        expiresIn: config.secrets.accessTokenLifetime as any,
+      }
+    )
+    const refreshToken = jwt.sign(
+      { email, userId, username },
+      config.secrets.refreshToken as Secret,
+      {
+        expiresIn: config.secrets.refreshTokenLifetime as any,
+      }
+    )
+
+    return {
+      accessToken,
+      refreshToken,
+    }
+  }
+
+  static validateToken(token: string, tokenType: TokenType = TokenType.ACCESS) {
+    try {
+      const isAccessToken = tokenType === TokenType.ACCESS
+
+      const decodedToken = jwt.verify(
+        token,
+        isAccessToken ? config.secrets.accessToken : config.secrets.refreshToken
+      )
+
+      return decodedToken as ITokenPayload
+    } catch (err: any) {
+      throw ApiError.Forbidden(err.message)
+    }
+  }
+
+  static getTokenPayload(token: string) {
+    const payload = jwt.decode(token)
+
+    if (typeof payload === 'string' || payload === null) {
+      throw ApiError.Forbidden('Token type is invalid')
+    }
+
+    if (
+      !('email' in payload) ||
+      !('userId' in payload) ||
+      !('username' in payload)
+    ) {
+      throw ApiError.Forbidden('Token structure is invalid')
+    }
+
+    return payload as {
+      email: string
+      userId: string
+      username: string
+    } & JwtPayload
+  }
+
+  static setRefreshTokenCookie(
+    ctx: Context,
+    refreshToken: string | null,
+    options?: Record<string, any>
+  ) {
+    const defaultOptions = {
+      path: '/',
+      domain: config.isDev ? 'localhost' : '.metasong.cc',
+      expires: addTimeToDate(config.secrets.refreshTokenLifetime),
+      httpOnly: !config.isDev,
+      secure: !config.isDev,
+      sameSite: 'strict',
+    }
+
+    options = Object.assign(defaultOptions, options ?? {})
+
+    ctx.cookies.set('refreshToken', refreshToken, options)
+
+    ctx.set('Access-Control-Allow-Credentials', 'true')
+  }
+  /*#endregion HELPERS*/
+}
+
+export default SessionService
