@@ -5,6 +5,11 @@ import { bodyParser } from '@koa/bodyparser'
 import router from '@routes'
 import { config } from '@config'
 import { prisma } from '@db'
+import {
+  errorHandlerMiddleware,
+  responseHandlerMiddleware,
+  koaLogger,
+} from '@shared/middlewares'
 
 const app = new Koa()
 
@@ -15,29 +20,23 @@ app.use(
   })
 )
 
-// Middleware для добавления Prisma в контекст
+app.use(bodyParser())
+
+// Connecting the middleware logger
+app.use(koaLogger)
+
+app.use(responseHandlerMiddleware)
+app.use(errorHandlerMiddleware)
+
+// Middleware for adding Prisma to context
 // app.context.prisma = prisma
 app.use(async (ctx, next) => {
   ctx.prisma = prisma
   await next()
 })
 
-app.use(bodyParser())
-
-// Error Handler
-app.use(async (ctx, next) => {
-  try {
-    await next()
-  } catch (err: any) {
-    // will only respond with JSON
-    ctx.status = err.statusCode || err.status || 500
-    ctx.body = {
-      message: err.message,
-    }
-  }
-})
-
 app.use(router.routes())
+app.use(router.allowedMethods())
 
 const PORT = config.ports.service
 
