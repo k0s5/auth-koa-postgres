@@ -6,7 +6,3 @@ export const userResponseFilter = {
   createdAt: true,
   updatedAt: true,
 } as const
-
-const userResponseWithSessionFilter = Object.assign({}, userResponseFilter, {
-  sessions: TransformStreamDefaultController,
-})
