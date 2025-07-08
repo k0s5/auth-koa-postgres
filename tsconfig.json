@@ -113,10 +113,15 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
+      "@core": ["src/core"],
+      "@core/*": ["src/core/*"],
       "@controllers": ["src/controllers"],
       "@services": ["src/services"],
+      "@db/*": ["src/db/*"],
       "@db": ["src/db"],
+      "@shared/*": ["src/shared/*"],
       "@shared": ["src/shared"],
+      "@routes/*": ["src/routes/*"],
       "@routes": ["src/routes/index"],
       "@config": ["src/shared/config"],
       "@types": ["src/shared/types"]
