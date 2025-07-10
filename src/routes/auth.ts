@@ -3,7 +3,7 @@ import { AuthController } from '@controllers'
 import { authSchema } from '@shared/validation'
 import {
   validateRequestPayload,
-  validateRefreshToken,
+  refreshTokenVerification,
 } from '@shared/middlewares'
 
 const router = new Router()
@@ -20,8 +20,8 @@ router.post(
   AuthController.signin
 )
 
-router.get('/refresh', validateRefreshToken, AuthController.refresh)
+router.get('/refresh', refreshTokenVerification, AuthController.refresh)
 
-router.get('/signout', validateRefreshToken, AuthController.signout)
+router.get('/signout', refreshTokenVerification, AuthController.signout)
 
 export default router
