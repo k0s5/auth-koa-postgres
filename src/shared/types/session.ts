@@ -41,7 +41,6 @@ export interface IRefreshTokenVerificationContext
   refreshToken: string
 }
 
-export enum TokenType {
-  'ACCESS' = 'access',
-  'REFRESH' = 'refresh',
-}
+export type TokenType =
+  | { accessToken: string; refreshToken?: never }
+  | { refreshToken: string; accessToken?: never }
