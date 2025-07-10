@@ -91,7 +91,13 @@ export class SessionService {
     }
   }
 
-  static async findSessionByToken(tokenDto: TokenType) {
+  static async findSessionByToken(tokenDto: TokenType, excludeRevoked = false) {
+    if (excludeRevoked) {
+      Object.assign(tokenDto, {
+        revokedAt: null,
+      })
+    }
+
     return await prisma.session.findFirst({
       where: tokenDto,
     })
@@ -109,7 +115,11 @@ export class SessionService {
       const session = await SessionService.findSessionByToken(tokenDto)
 
       if (!session) {
-        throw ApiError.Forbidden(`Token is out of date`)
+        throw ApiError.Forbidden(`Session not found`)
+      }
+
+      if (session && session.revokedAt) {
+        throw ApiError.Forbidden(`Session revoked`)
       }
 
       return decodedToken as ITokenPayload
