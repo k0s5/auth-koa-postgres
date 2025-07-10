@@ -1,6 +1,11 @@
 import { Context } from 'koa'
 import { AuthService, SessionService } from '@services'
-import { ISignInPayload, ISignUpPayload } from '@shared/types'
+import {
+  ISignInPayload,
+  ISignUpPayload,
+  ITokenPayload,
+  IValidateRefreshTokenContext,
+} from '@shared/types'
 import { ApiError } from '@/shared/api'
 import bcrypt from 'bcryptjs'
 import { userResponseFilter } from '@/db/filters/user.filter'
@@ -52,16 +57,16 @@ export class AuthController {
     }
   }
 
-  static async refresh(ctx: Context) {
+  static async refresh(ctx: Context & IValidateRefreshTokenContext) {
     const user = await AuthService.getUser(
-      ctx.tokenPayload!.email,
+      ctx.tokenPayload.email,
       userResponseFilter
     )
 
     const { accessToken, refreshToken: newRefreshToken } =
-      SessionService.generateTokens(ctx.tokenPayload!)
+      SessionService.generateTokens(ctx.tokenPayload)
 
-    await SessionService.update(ctx.refreshToken!, { newRefreshToken })
+    await SessionService.update(ctx.refreshToken, { newRefreshToken })
 
     SessionService.setRefreshTokenCookie(ctx, newRefreshToken)
 
@@ -71,8 +76,8 @@ export class AuthController {
     }
   }
 
-  static async signout(ctx: Context) {
-    await SessionService.delete(ctx.refreshToken!)
+  static async signout(ctx: Context & IValidateRefreshTokenContext) {
+    await SessionService.delete(ctx.refreshToken)
 
     SessionService.setRefreshTokenCookie(ctx, null, {
       expires: new Date(0),
