@@ -2098,7 +2098,8 @@ export namespace Prisma {
 
   export type SessionMinAggregateOutputType = {
     id: string | null
-    token: string | null
+    accessToken: string | null
+    refreshToken: string | null
     userId: string | null
     fingerprint: string | null
     ip: string | null
@@ -2110,7 +2111,8 @@ export namespace Prisma {
 
   export type SessionMaxAggregateOutputType = {
     id: string | null
-    token: string | null
+    accessToken: string | null
+    refreshToken: string | null
     userId: string | null
     fingerprint: string | null
     ip: string | null
@@ -2122,7 +2124,8 @@ export namespace Prisma {
 
   export type SessionCountAggregateOutputType = {
     id: number
-    token: number
+    accessToken: number
+    refreshToken: number
     userId: number
     fingerprint: number
     ip: number
@@ -2136,7 +2139,8 @@ export namespace Prisma {
 
   export type SessionMinAggregateInputType = {
     id?: true
-    token?: true
+    accessToken?: true
+    refreshToken?: true
     userId?: true
     fingerprint?: true
     ip?: true
@@ -2148,7 +2152,8 @@ export namespace Prisma {
 
   export type SessionMaxAggregateInputType = {
     id?: true
-    token?: true
+    accessToken?: true
+    refreshToken?: true
     userId?: true
     fingerprint?: true
     ip?: true
@@ -2160,7 +2165,8 @@ export namespace Prisma {
 
   export type SessionCountAggregateInputType = {
     id?: true
-    token?: true
+    accessToken?: true
+    refreshToken?: true
     userId?: true
     fingerprint?: true
     ip?: true
@@ -2245,7 +2251,8 @@ export namespace Prisma {
 
   export type SessionGroupByOutputType = {
     id: string
-    token: string
+    accessToken: string
+    refreshToken: string
     userId: string
     fingerprint: string
     ip: string
@@ -2274,7 +2281,8 @@ export namespace Prisma {
 
   export type SessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    token?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
     userId?: boolean
     fingerprint?: boolean
     ip?: boolean
@@ -2287,7 +2295,8 @@ export namespace Prisma {
 
   export type SessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    token?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
     userId?: boolean
     fingerprint?: boolean
     ip?: boolean
@@ -2300,7 +2309,8 @@ export namespace Prisma {
 
   export type SessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    token?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
     userId?: boolean
     fingerprint?: boolean
     ip?: boolean
@@ -2313,7 +2323,8 @@ export namespace Prisma {
 
   export type SessionSelectScalar = {
     id?: boolean
-    token?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
     userId?: boolean
     fingerprint?: boolean
     ip?: boolean
@@ -2323,7 +2334,7 @@ export namespace Prisma {
     revokedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token" | "userId" | "fingerprint" | "ip" | "ua" | "expiresAt" | "createdAt" | "revokedAt", ExtArgs["result"]["session"]>
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "accessToken" | "refreshToken" | "userId" | "fingerprint" | "ip" | "ua" | "expiresAt" | "createdAt" | "revokedAt", ExtArgs["result"]["session"]>
   export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2341,7 +2352,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      token: string
+      accessToken: string
+      refreshToken: string
       userId: string
       fingerprint: string
       ip: string
@@ -2774,7 +2786,8 @@ export namespace Prisma {
    */
   interface SessionFieldRefs {
     readonly id: FieldRef<"Session", 'String'>
-    readonly token: FieldRef<"Session", 'String'>
+    readonly accessToken: FieldRef<"Session", 'String'>
+    readonly refreshToken: FieldRef<"Session", 'String'>
     readonly userId: FieldRef<"Session", 'String'>
     readonly fingerprint: FieldRef<"Session", 'String'>
     readonly ip: FieldRef<"Session", 'String'>
@@ -3225,7 +3238,8 @@ export namespace Prisma {
 
   export const SessionScalarFieldEnum: {
     id: 'id',
-    token: 'token',
+    accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
     userId: 'userId',
     fingerprint: 'fingerprint',
     ip: 'ip',
@@ -3389,7 +3403,8 @@ export namespace Prisma {
     OR?: SessionWhereInput[]
     NOT?: SessionWhereInput | SessionWhereInput[]
     id?: StringFilter<"Session"> | string
-    token?: StringFilter<"Session"> | string
+    accessToken?: StringFilter<"Session"> | string
+    refreshToken?: StringFilter<"Session"> | string
     userId?: StringFilter<"Session"> | string
     fingerprint?: StringFilter<"Session"> | string
     ip?: StringFilter<"Session"> | string
@@ -3402,7 +3417,8 @@ export namespace Prisma {
 
   export type SessionOrderByWithRelationInput = {
     id?: SortOrder
-    token?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
     userId?: SortOrder
     fingerprint?: SortOrder
     ip?: SortOrder
@@ -3415,7 +3431,8 @@ export namespace Prisma {
 
   export type SessionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    token?: string
+    accessToken?: string
+    refreshToken?: string
     AND?: SessionWhereInput | SessionWhereInput[]
     OR?: SessionWhereInput[]
     NOT?: SessionWhereInput | SessionWhereInput[]
@@ -3427,11 +3444,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Session"> | Date | string
     revokedAt?: DateTimeNullableFilter<"Session"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "token">
+  }, "id" | "accessToken" | "refreshToken">
 
   export type SessionOrderByWithAggregationInput = {
     id?: SortOrder
-    token?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
     userId?: SortOrder
     fingerprint?: SortOrder
     ip?: SortOrder
@@ -3449,7 +3467,8 @@ export namespace Prisma {
     OR?: SessionScalarWhereWithAggregatesInput[]
     NOT?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Session"> | string
-    token?: StringWithAggregatesFilter<"Session"> | string
+    accessToken?: StringWithAggregatesFilter<"Session"> | string
+    refreshToken?: StringWithAggregatesFilter<"Session"> | string
     userId?: StringWithAggregatesFilter<"Session"> | string
     fingerprint?: StringWithAggregatesFilter<"Session"> | string
     ip?: StringWithAggregatesFilter<"Session"> | string
@@ -3535,7 +3554,8 @@ export namespace Prisma {
 
   export type SessionCreateInput = {
     id?: string
-    token: string
+    accessToken: string
+    refreshToken: string
     fingerprint: string
     ip: string
     ua: string
@@ -3547,7 +3567,8 @@ export namespace Prisma {
 
   export type SessionUncheckedCreateInput = {
     id?: string
-    token: string
+    accessToken: string
+    refreshToken: string
     userId: string
     fingerprint: string
     ip: string
@@ -3559,7 +3580,8 @@ export namespace Prisma {
 
   export type SessionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
     ua?: StringFieldUpdateOperationsInput | string
@@ -3571,7 +3593,8 @@ export namespace Prisma {
 
   export type SessionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
@@ -3583,7 +3606,8 @@ export namespace Prisma {
 
   export type SessionCreateManyInput = {
     id?: string
-    token: string
+    accessToken: string
+    refreshToken: string
     userId: string
     fingerprint: string
     ip: string
@@ -3595,7 +3619,8 @@ export namespace Prisma {
 
   export type SessionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
     ua?: StringFieldUpdateOperationsInput | string
@@ -3606,7 +3631,8 @@ export namespace Prisma {
 
   export type SessionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
@@ -3750,7 +3776,8 @@ export namespace Prisma {
 
   export type SessionCountOrderByAggregateInput = {
     id?: SortOrder
-    token?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
     userId?: SortOrder
     fingerprint?: SortOrder
     ip?: SortOrder
@@ -3762,7 +3789,8 @@ export namespace Prisma {
 
   export type SessionMaxOrderByAggregateInput = {
     id?: SortOrder
-    token?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
     userId?: SortOrder
     fingerprint?: SortOrder
     ip?: SortOrder
@@ -3774,7 +3802,8 @@ export namespace Prisma {
 
   export type SessionMinOrderByAggregateInput = {
     id?: SortOrder
-    token?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
     userId?: SortOrder
     fingerprint?: SortOrder
     ip?: SortOrder
@@ -3988,7 +4017,8 @@ export namespace Prisma {
 
   export type SessionCreateWithoutUserInput = {
     id?: string
-    token: string
+    accessToken: string
+    refreshToken: string
     fingerprint: string
     ip: string
     ua: string
@@ -3999,7 +4029,8 @@ export namespace Prisma {
 
   export type SessionUncheckedCreateWithoutUserInput = {
     id?: string
-    token: string
+    accessToken: string
+    refreshToken: string
     fingerprint: string
     ip: string
     ua: string
@@ -4039,7 +4070,8 @@ export namespace Prisma {
     OR?: SessionScalarWhereInput[]
     NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
     id?: StringFilter<"Session"> | string
-    token?: StringFilter<"Session"> | string
+    accessToken?: StringFilter<"Session"> | string
+    refreshToken?: StringFilter<"Session"> | string
     userId?: StringFilter<"Session"> | string
     fingerprint?: StringFilter<"Session"> | string
     ip?: StringFilter<"Session"> | string
@@ -4107,7 +4139,8 @@ export namespace Prisma {
 
   export type SessionCreateManyUserInput = {
     id?: string
-    token: string
+    accessToken: string
+    refreshToken: string
     fingerprint: string
     ip: string
     ua: string
@@ -4118,7 +4151,8 @@ export namespace Prisma {
 
   export type SessionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
     ua?: StringFieldUpdateOperationsInput | string
@@ -4129,7 +4163,8 @@ export namespace Prisma {
 
   export type SessionUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
     ua?: StringFieldUpdateOperationsInput | string
@@ -4140,7 +4175,8 @@ export namespace Prisma {
 
   export type SessionUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    token?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     fingerprint?: StringFieldUpdateOperationsInput | string
     ip?: StringFieldUpdateOperationsInput | string
     ua?: StringFieldUpdateOperationsInput | string

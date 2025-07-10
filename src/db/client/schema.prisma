@@ -23,18 +23,20 @@ model User {
 }
 
 model Session {
-  id          String    @id @default(uuid())
-  token       String    @unique
-  userId      String
-  fingerprint String
-  ip          String
-  ua          String
-  expiresAt   DateTime
-  createdAt   DateTime  @default(now())
-  revokedAt   DateTime?
-  user        User      @relation(fields: [userId], references: [id])
+  id           String    @id @default(uuid())
+  accessToken  String    @unique
+  refreshToken String    @unique
+  userId       String
+  fingerprint  String
+  ip           String
+  ua           String
+  expiresAt    DateTime
+  createdAt    DateTime  @default(now())
+  revokedAt    DateTime?
+  user         User      @relation(fields: [userId], references: [id])
 
-  @@index([token])
+  @@index([accessToken])
+  @@index([refreshToken])
   @@index([userId])
   @@map("sessions")
 }
