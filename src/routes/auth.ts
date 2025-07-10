@@ -1,5 +1,5 @@
 import Router from '@koa/router'
-import AuthController from '@controllers'
+import { AuthController } from '@controllers'
 import { authSchema } from '@shared/validation'
 import {
   validateRequestPayload,
