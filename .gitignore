@@ -11,6 +11,10 @@ build/
 # Logs
 logs/
 
+# DB
+src/db/client/
+src/db/migrations/
+
 # Environment variables
 .env
 .env.local
