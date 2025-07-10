@@ -3,7 +3,7 @@ import { SessionService } from '@services'
 import { TokenType } from '@shared/types'
 import { ApiError } from '../api'
 
-export async function validateRefreshToken(ctx: Context, next: Next) {
+export async function refreshTokenVerification(ctx: Context, next: Next) {
   const refreshToken = ctx.cookies.get('refreshToken')
 
   if (!refreshToken) {
