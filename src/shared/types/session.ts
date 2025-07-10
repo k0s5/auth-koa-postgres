@@ -31,6 +31,11 @@ export interface IDeleteSessionPayload {
   token: string
 }
 
+export interface IValidateRefreshTokenContext {
+  tokenPayload: ITokenPayload
+  refreshToken: string
+}
+
 export enum TokenType {
   'ACCESS' = 'access',
   'REFRESH' = 'refresh',
