@@ -91,27 +91,25 @@ export class SessionService {
     }
   }
 
-  static async validateToken(
-    token: string,
-    tokenType: TokenType = TokenType.ACCESS
-  ) {
+  static async findSessionByToken(tokenDto: TokenType) {
+    return await prisma.session.findFirst({
+      where: tokenDto,
+    })
+  }
+
+  static async validateToken(tokenDto: TokenType) {
     try {
-      const isAccessToken = tokenType === TokenType.ACCESS
+      const { accessToken, refreshToken } = tokenDto
 
       const decodedToken = jwt.verify(
-        token,
-        isAccessToken ? config.secrets.accessToken : config.secrets.refreshToken
+        accessToken ?? refreshToken,
+        accessToken ? config.secrets.accessToken : config.secrets.refreshToken
       )
 
-      const isSessionExists = await prisma.session.findFirst({
-        where: {
-          ...(isAccessToken && { accessToken: token }),
-          ...(!isAccessToken && { refreshToken: token }),
-        },
-      })
+      const session = await SessionService.findSessionByToken(tokenDto)
 
-      if (!isSessionExists) {
-        throw ApiError.Forbidden('Session was not founded')
+      if (!session) {
+        throw ApiError.Forbidden(`Token is out of date`)
       }
 
       return decodedToken as ITokenPayload

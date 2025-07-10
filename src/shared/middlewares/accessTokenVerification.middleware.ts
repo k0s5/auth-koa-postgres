@@ -11,9 +11,9 @@ export async function accessTokenVerification(ctx: Context, next: Next) {
   }
 
   // Split token from Bearer prefix
-  const token = authorization.split(' ')[1]
+  const accessToken = authorization.split(' ')[1]
 
-  ctx.tokenPayload = await SessionService.validateToken(token, TokenType.ACCESS)
+  ctx.tokenPayload = await SessionService.validateToken({ accessToken })
 
   await next()
 }
