@@ -1,14 +1,14 @@
 import { Context } from 'koa'
-import jwt, { type Secret, type JwtPayload } from 'jsonwebtoken'
-import { config } from '@/shared/config'
-import { addTimeToDate } from '@shared/utils'
+import { ApiError } from '@shared/api'
 import { prisma } from '@/db'
+import { config } from '@/shared/config'
+import jwt, { type Secret, type JwtPayload } from 'jsonwebtoken'
+import { addTimeToDate } from '@shared/utils'
 import {
   type ICreateSessionPayload,
   type ITokenPayload,
   TokenType,
 } from '@/shared/types'
-import { ApiError } from '@/shared/api'
 
 export class SessionService {
   static async create(ctx: Context, payload: ICreateSessionPayload) {
@@ -21,7 +21,8 @@ export class SessionService {
     await prisma.session.create({
       data: {
         userId: payload.userId,
-        token: refreshToken,
+        accessToken,
+        refreshToken,
         fingerprint: crypto.randomUUID(),
         ua: ctx.request.headers['user-agent'] ?? 'unknown',
         ip: ctx.request.ip || ctx.get('x-forwarded-for') || '::1',
@@ -37,26 +38,31 @@ export class SessionService {
 
   static async update(
     refreshToken: string,
-    payload: { newRefreshToken: string; fingerprint?: string }
+    payload: {
+      newAccessToken: string
+      newRefreshToken: string
+      fingerprint?: string
+    }
   ) {
     const now = new Date()
 
     await prisma.session.update({
       data: {
-        token: payload.newRefreshToken,
+        accessToken: payload.newAccessToken,
+        refreshToken: payload.newRefreshToken,
         ...(payload?.fingerprint && { fingerprint: payload.fingerprint }),
         createdAt: now,
         expiresAt: addTimeToDate(config.secrets.refreshTokenLifetime, now),
       },
       where: {
-        token: refreshToken,
+        refreshToken,
       },
     })
   }
 
-  static async delete(token: string) {
+  static async delete(refreshToken: string) {
     await prisma.session.delete({
-      where: { token },
+      where: { refreshToken },
     })
   }
 
@@ -85,7 +91,10 @@ export class SessionService {
     }
   }
 
-  static validateToken(token: string, tokenType: TokenType = TokenType.ACCESS) {
+  static async validateToken(
+    token: string,
+    tokenType: TokenType = TokenType.ACCESS
+  ) {
     try {
       const isAccessToken = tokenType === TokenType.ACCESS
 
@@ -93,6 +102,17 @@ export class SessionService {
         token,
         isAccessToken ? config.secrets.accessToken : config.secrets.refreshToken
       )
+
+      const isSessionExists = await prisma.session.findFirst({
+        where: {
+          ...(isAccessToken && { accessToken: token }),
+          ...(!isAccessToken && { refreshToken: token }),
+        },
+      })
+
+      if (!isSessionExists) {
+        throw ApiError.Forbidden('Session was not founded')
+      }
 
       return decodedToken as ITokenPayload
     } catch (err: any) {

@@ -3,7 +3,8 @@ import type { JwtPayload } from 'jsonwebtoken'
 
 export interface ISession {
   id: string
-  token: string
+  accessToken: string
+  refreshToken: string
   user: IUser
   expiresAt: Date
   createdAt: Date
@@ -28,7 +29,7 @@ export interface ICreateSessionPayload {
 }
 
 export interface IDeleteSessionPayload {
-  token: string
+  refreshToken: string
 }
 
 export interface IAccessTokenVerificationContext {

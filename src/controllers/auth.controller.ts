@@ -1,10 +1,10 @@
 import { Context } from 'koa'
-import { AuthService, SessionService } from '@services'
+import { SessionService, UserService } from '@services'
 import {
   ISignInPayload,
   ISignUpPayload,
   ITokenPayload,
-  IValidateRefreshTokenContext,
+  IRefreshTokenVerificationContext,
 } from '@shared/types'
 import { ApiError } from '@/shared/api'
 import bcrypt from 'bcryptjs'
@@ -16,7 +16,7 @@ export class AuthController {
     const { email, password, terms } = ctx.request.body as ISignUpPayload
 
     //todo add user fingerprint
-    const newUser = await AuthService.createUser({ email, password })
+    const newUser = await UserService.createUser({ email, password })
 
     const { accessToken, refreshToken } = await SessionService.create(ctx, {
       email,
@@ -35,7 +35,7 @@ export class AuthController {
   static async signin(ctx: Context) {
     const { email, password } = ctx.request.body as ISignInPayload
 
-    const user = await AuthService.getUser(email)
+    const user = await UserService.getUserByEmail(email)
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash)
 
@@ -57,8 +57,8 @@ export class AuthController {
     }
   }
 
-  static async refresh(ctx: Context & IValidateRefreshTokenContext) {
-    const user = await AuthService.getUser(
+  static async refresh(ctx: Context & IRefreshTokenVerificationContext) {
+    const user = await UserService.getUserByEmail(
       ctx.tokenPayload.email,
       userResponseFilter
     )
@@ -66,7 +66,10 @@ export class AuthController {
     const { accessToken, refreshToken: newRefreshToken } =
       SessionService.generateTokens(ctx.tokenPayload)
 
-    await SessionService.update(ctx.refreshToken, { newRefreshToken })
+    await SessionService.update(ctx.refreshToken, {
+      newAccessToken: accessToken,
+      newRefreshToken,
+    })
 
     SessionService.setRefreshTokenCookie(ctx, newRefreshToken)
 
@@ -76,7 +79,7 @@ export class AuthController {
     }
   }
 
-  static async signout(ctx: Context & IValidateRefreshTokenContext) {
+  static async signout(ctx: Context & IRefreshTokenVerificationContext) {
     await SessionService.delete(ctx.refreshToken)
 
     SessionService.setRefreshTokenCookie(ctx, null, {

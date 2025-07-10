@@ -10,7 +10,7 @@ export async function refreshTokenVerification(ctx: Context, next: Next) {
     throw ApiError.Forbidden('Refresh token is required')
   }
 
-  ctx.tokenPayload = SessionService.validateToken(
+  ctx.tokenPayload = await SessionService.validateToken(
     refreshToken,
     TokenType.REFRESH
   )
