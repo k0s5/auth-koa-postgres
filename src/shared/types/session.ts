@@ -31,8 +31,12 @@ export interface IDeleteSessionPayload {
   token: string
 }
 
-export interface IValidateRefreshTokenContext {
+export interface IAccessTokenVerificationContext {
   tokenPayload: ITokenPayload
+}
+
+export interface IRefreshTokenVerificationContext
+  extends IAccessTokenVerificationContext {
   refreshToken: string
 }
 
