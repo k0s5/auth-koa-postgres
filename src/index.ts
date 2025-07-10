@@ -31,7 +31,6 @@ app.use(responseHandlerMiddleware)
 app.use(errorHandlerMiddleware)
 
 // Middleware for adding Prisma to context
-// app.context.prisma = prisma
 app.use(async (ctx, next) => {
   ctx.prisma = prisma
   await next()
