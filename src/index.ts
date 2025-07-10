@@ -13,6 +13,8 @@ import {
 
 const app = new Koa()
 
+app.keys = [config.secrets.cookie]
+
 app.use(
   cors({
     origin: config.cors?.origin,

@@ -134,6 +134,7 @@ export class SessionService {
       httpOnly: !config.isDev,
       secure: !config.isDev,
       sameSite: 'strict',
+      signed: true,
     }
 
     options = Object.assign(defaultOptions, options ?? {})

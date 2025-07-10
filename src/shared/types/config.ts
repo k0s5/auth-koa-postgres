@@ -19,5 +19,6 @@ export interface IConfig {
     refreshToken: string
     accessTokenLifetime: string
     refreshTokenLifetime: string
+    cookie: string
   }
 }

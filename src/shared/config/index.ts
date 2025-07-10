@@ -45,6 +45,7 @@ function validateEnv(): IConfig {
       refreshToken: value.REFRESH_TOKEN_SECRET,
       accessTokenLifetime: value.ACCESS_TOKEN_LIFETIME,
       refreshTokenLifetime: value.REFRESH_TOKEN_LIFETIME,
+      cookie: value.COOKIE_SECRET,
     },
   }
 }

@@ -30,6 +30,7 @@ export const envSchema = Joi.object({
   ACCESS_TOKEN_LIFETIME: Joi.string(),
   REFRESH_TOKEN_SECRET: Joi.string(),
   REFRESH_TOKEN_LIFETIME: Joi.string(),
+  COOKIE_SECRET: Joi.string(),
 
   // Email
   // SMTP_HOST: Joi.string().when('NODE_ENV', {
